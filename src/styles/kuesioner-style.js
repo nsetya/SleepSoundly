@@ -19,13 +19,22 @@ const Style = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
-    marginLeft: 28
+    marginLeft: 28,
   },
   radioButton: {
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    marginLeft: 15
-  }
+    marginLeft: 15,
+  },
+  buttonSubmit: {
+    backgroundColor: "#DDDDDD",
+    padding: 10,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 12,
+    borderRadius: 4,
+  },
 });
 
 export default Style;

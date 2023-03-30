@@ -1,10 +1,27 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import RadioGroup from "react-native-radio-buttons-group";
 import {
   mockAnswerP2,
   mockAnswerP4,
   mockAnswerP5,
+  mockAnswerP5b,
+  mockAnswerP5c,
+  mockAnswerP5d,
+  mockAnswerP5e,
+  mockAnswerP5f,
+  mockAnswerP5g,
+  mockAnswerP5h,
+  mockAnswerP5i,
+  mockAnswerP6,
+  mockAnswerP7,
   mockAnswerP8,
   mockAnswerP9,
 } from "../mockAnswer/index.js";
@@ -13,11 +30,26 @@ import Style from "../styles/kuesioner-style.js";
 export default function Kuesioner({ navigation }) {
   const [sleepTime, onChangeSleepTime] = React.useState("");
   const [awakeTime, onChangeAwakeTime] = React.useState("");
-  const [answerP2, setAnswerP2] = useState(mockAnswerP2);
-  const [answerP4, setAnswerP4] = useState(mockAnswerP4);
-  const [answerP5, setAnswerP5] = useState(mockAnswerP5);
-  const [answerP8, setAnswerP8] = useState(mockAnswerP8);
-  const [answerP9, setAnswerP9] = useState(mockAnswerP9);
+  const [answers, setAnswers] = useState({});
+  const [totalValue, setTotalValue] = useState(0);
+
+  useEffect(() => {
+    const total = Object.keys(answers).reduce(
+      (acc, curr) => acc + answers[curr]?.value,
+      0
+    );
+    setTotalValue(total);
+    console.log("total" + total);
+    // console.log(JSON.stringify(answers, null, 2))
+  }, [answers]);
+
+  const handlePress = (no) => (radioButtons) => {
+    const selectedVal = radioButtons?.find((v) => v.selected);
+    setAnswers((prev) => ({
+      ...prev,
+      [no]: selectedVal,
+    }));
+  };
 
   return (
     <ScrollView>
@@ -38,8 +70,8 @@ export default function Kuesioner({ navigation }) {
         </Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP2}
-          onPress={() => setAnswerP2}
+          radioButtons={mockAnswerP2}
+          onPress={handlePress(2)}
         />
         <Text style={Style.pertanyaan}>
           3. Jam berapa biasanya anda bangun di pagi hari?
@@ -56,8 +88,8 @@ export default function Kuesioner({ navigation }) {
         </Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP4}
-          onPress={() => setAnswerP4}
+          radioButtons={mockAnswerP4}
+          onPress={handlePress(4)}
         />
         <Text style={Style.pertanyaan}>
           5. Seberapa sering masalah dibawah ini mengganggu anda?
@@ -67,58 +99,58 @@ export default function Kuesioner({ navigation }) {
         </Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP5}
-          onPress={() => setAnswerP5}
+          radioButtons={mockAnswerP5}
+          onPress={handlePress("5a")}
         />
         <Text style={Style.pertanyaan}>
           b. Terbangun ditengah malam atau dini hari
         </Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP5}
-          onPress={() => setAnswerP5}
+          radioButtons={mockAnswerP5b}
+          onPress={handlePress("5b")}
         />
         <Text style={Style.pertanyaan}>c. Terbangun untuk ke kamar mandi</Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP5}
-          onPress={() => setAnswerP5}
+          radioButtons={mockAnswerP5c}
+          onPress={handlePress("5c")}
         />
         <Text style={Style.pertanyaan}>d. Sulit bernafas dengan baik</Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP5}
-          onPress={() => setAnswerP5}
+          radioButtons={mockAnswerP5d}
+          onPress={handlePress("5d")}
         />
         <Text style={Style.pertanyaan}>e. Batuk atau mengorok</Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP5}
-          onPress={() => setAnswerP5}
+          radioButtons={mockAnswerP5e}
+          onPress={handlePress("5e")}
         />
         <Text style={Style.pertanyaan}>f. Kedinginan di malam hari</Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP5}
-          onPress={() => setAnswerP5}
+          radioButtons={mockAnswerP5f}
+          onPress={handlePress("5f")}
         />
         <Text style={Style.pertanyaan}>g. Kepanasan di malam hari</Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP5}
-          onPress={() => setAnswerP5}
+          radioButtons={mockAnswerP5g}
+          onPress={handlePress("5g")}
         />
         <Text style={Style.pertanyaan}>h. Mimpi buruk</Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP5}
-          onPress={() => setAnswerP5}
+          radioButtons={mockAnswerP5h}
+          onPress={handlePress("5h")}
         />
         <Text style={Style.pertanyaan}>i. Terasa nyeri</Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP5}
-          onPress={() => setAnswerP5}
+          radioButtons={mockAnswerP5i}
+          onPress={handlePress("5i")}
         />
         <Text style={Style.pertanyaan}>
           6. Selama satu bulan terakhir, seberapa sering anda menggunakan obat
@@ -126,8 +158,8 @@ export default function Kuesioner({ navigation }) {
         </Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP5}
-          onPress={() => setAnswerP5}
+          radioButtons={mockAnswerP6}
+          onPress={handlePress(6)}
         />
         <Text style={Style.pertanyaan}>
           7. Selama satu bulan terakhir, seberapa sering anda mengantuk ketika
@@ -135,8 +167,8 @@ export default function Kuesioner({ navigation }) {
         </Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP5}
-          onPress={() => setAnswerP5}
+          radioButtons={mockAnswerP7}
+          onPress={handlePress(7)}
         />
         <Text style={Style.pertanyaan}>
           8. Selama satu bulan terakhir, berapa banyak masalah yang anda
@@ -144,8 +176,8 @@ export default function Kuesioner({ navigation }) {
         </Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP8}
-          onPress={() => setAnswerP8}
+          radioButtons={mockAnswerP8}
+          onPress={handlePress(8)}
         />
         <Text style={Style.pertanyaan}>
           9. Selama satu bulan terakhir, bagaimana anda menilai kepuasan tidur
@@ -153,9 +185,15 @@ export default function Kuesioner({ navigation }) {
         </Text>
         <RadioGroup
           containerStyle={Style.radioButton}
-          radioButtons={answerP9}
-          onPress={() => setAnswerP9}
+          radioButtons={mockAnswerP9}
+          onPress={handlePress(9)}
         />
+        <TouchableOpacity
+          style={Style.buttonSubmit}
+          onPress={() => Alert.alert("Simple Button pressed")}
+        >
+          <Text style={{ fontSize: 18 }}>Submit</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

@@ -6,10 +6,11 @@ import Kuesioner from "./src/screen/Kuesioner.js";
 import Tips from "./src/screen/Tips.js";
 import Musik from "./src/screen/Musik";
 import Alarm from "./src/screen/Alarm";
-import Diary from "./src/screen/Diary.js";
+// import Diary from "./src/screen/Diary.js";
 import IsiArtikel1 from "./src/screen/IsiArtikel1.js";
 import IsiArtikel2 from "./src/screen/IsiArtikel2.js";
 import IsiArtikel3 from "./src/screen/IsiArtikel3.js";
+import SleepDiary from "./src/screen/SleepDiary.js";
 
 const Stack = createNativeStackNavigator();
 
@@ -66,9 +67,23 @@ function App({ navigation }) {
             },
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Diary"
           component={Diary}
+          options={{
+            title: "Sleep Diary",
+            headerStyle: {
+              backgroundColor: "#57C5B6",
+            },
+            headerTintColor: "#F9FAFC",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+        /> */}
+        <Stack.Screen
+          name="SleepDiary"
+          component={SleepDiary}
           options={{
             title: "Sleep Diary",
             headerStyle: {
