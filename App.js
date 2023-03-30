@@ -2,7 +2,6 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./src/screen/HomeScreen.js";
-import SplashScreen from "./src/screen/SplashScreen.js";
 import Kuesioner from "./src/screen/Kuesioner.js";
 import Tips from "./src/screen/Tips.js";
 import Musik from "./src/screen/Musik";
@@ -21,13 +20,6 @@ function App({ navigation }) {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="SplashScreen"
-          component={SplashScreen}
           options={{
             headerShown: false,
           }}

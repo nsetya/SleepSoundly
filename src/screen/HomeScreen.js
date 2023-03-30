@@ -1,12 +1,16 @@
 import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 
 function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={{ marginBottom: 150, fontSize: 30, marginTop: -100 }}>
-        Sleep Soundly
-      </Text>
+      <Image
+        source={{
+          uri: "https://img.icons8.com/external-filled-outline-geotatah/64/null/external-bedroom-sleepless-night-color-filled-outline-geotatah-4.png",
+        }}
+        style={styles.headerImage}
+      />
+      <Text style={styles.headerText}>Sleep Soundly</Text>
       <View>
         <Pressable
           style={styles.button}
@@ -48,7 +52,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F9FAFC",
+    backgroundColor: "#33424A",
   },
   text: {
     textAlign: "center",
@@ -62,12 +66,17 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     borderRadius: 10,
   },
-  tulisan: {
+  headerText: {
+    fontSize: 30,
+    marginTop: 16,
+    marginBottom: 100,
+    color: "#F4F7F6",
     fontSize: 32,
   },
-  tulisan1: {
-    fontSize: 32,
-    marginLeft: 30,
+  headerImage: {
+    width: 80,
+    height: 80,
+    marginBottom: 12,
   },
 });
 
