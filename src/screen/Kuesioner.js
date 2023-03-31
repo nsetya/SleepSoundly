@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,57 +6,115 @@ import {
   ScrollView,
   TouchableOpacity,
   Modal,
+  Button,
 } from "react-native";
-import RadioGroup from "react-native-radio-buttons-group";
+// import RadioGroup from "react-native-radio-buttons-group";
 import {
   mockAnswerP2,
   mockAnswerP4,
   mockAnswerP5,
-  mockAnswerP5b,
-  mockAnswerP5c,
-  mockAnswerP5d,
-  mockAnswerP5e,
-  mockAnswerP5f,
-  mockAnswerP5g,
-  mockAnswerP5h,
-  mockAnswerP5i,
   mockAnswerP6,
   mockAnswerP7,
   mockAnswerP8,
   mockAnswerP9,
 } from "../mock/mockAnswer.js";
 import Style from "../styles/kuesioner-style.js";
+import RadioButtonGroup from "../components/RadioButtonGroup/index.js";
 
-export default function Kuesioner({ navigation }) {
+const radioButtonsListForm = [
+  {
+    textQuestions: '4. Berapa lama tidur anda di malam hari?',
+    answers: mockAnswerP4,
+    key: 'p4'
+  },
+  {
+    textQuestions: '5. Seberapa sering masalah dibawah ini mengganggu anda?',
+    answers: mockAnswerP5,
+    key: 'p5'
+  },
+  {
+    textQuestions: 'a. Tidak dapat tertidur selama 30 menit sejak berbaring',
+    answers: mockAnswerP5,
+    key: 'p5a'
+  },
+  {
+    textQuestions: 'b. Terbangun ditengah malam atau dini hari',
+    answers: mockAnswerP5,
+    key: 'p5b'
+  },
+  {
+    textQuestions: 'c. Terbangun untuk ke kamar mandi',
+    answers: mockAnswerP5,
+    key: 'p5c'
+  },
+  {
+    textQuestions: 'd. Sulit bernafas dengan baik',
+    answers: mockAnswerP5,
+    key: 'p5d'
+  },
+  {
+    textQuestions: 'e. Batuk atau mengorok',
+    answers: mockAnswerP5,
+    key: 'p5e'
+  },
+  {
+    textQuestions: 'f. Kedinginan di malam hari',
+    answers: mockAnswerP5,
+    key: 'p5f'
+  },
+  {
+    textQuestions: 'g. Kepanasan di malam hari',
+    answers: mockAnswerP5,
+    key: 'p5g'
+  },
+  {
+    textQuestions: 'h. Mimpi buruk',
+    answers: mockAnswerP5,
+    key: 'p5h'
+  },
+  {
+    textQuestions: 'i. Terasa nyeri',
+    answers: mockAnswerP5,
+    key: 'p5i'
+  },
+  {
+    textQuestions: '6. Selama satu bulan terakhir, seberapa sering anda menggunakan obat tidur',
+    answers: mockAnswerP6,
+    key: 'p6'
+  },
+  {
+    textQuestions: `7. Selama satu bulan terakhir, seberapa sering anda mengantuk ketika
+    melakukan aktivitas di siang hari`,
+    answers: mockAnswerP7,
+    key: 'p7'
+  },
+  {
+    textQuestions: `8. Selama satu bulan terakhir, berapa banyak masalah yang anda
+    dapatkan dan seberapa antusias anda selesaikan permasalahan tersebut?`,
+    answers: mockAnswerP8,
+    key: 'p8'
+  },
+  {
+    textQuestions: `9. Selama satu bulan terakhir, bagaimana anda menilai kepuasan tidur
+    anda?`,
+    answers: mockAnswerP9,
+    key: 'p9'
+  },
+]
+
+export default function Kuesioner({ navigation, route }) {
+  
   const [sleepTime, onChangeSleepTime] = React.useState("");
   const [awakeTime, onChangeAwakeTime] = React.useState("");
   const [answers, setAnswers] = useState({});
-  const [totalValue, setTotalValue] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    const total = Object.keys(answers).reduce(
-      (acc, curr) => acc + answers[curr]?.value,
-      0
-    );
-    setTotalValue(total);
-  }, [answers]);
-
-  const handlePress = (no) => (radioButtons) => {
-    const selectedVal = radioButtons?.find((v) => v.selected);
-    setAnswers((prev) => ({
-      ...prev,
-      [no]: selectedVal,
-    }));
-  };
-
-  const convertSleepTime = Number(sleepTime * 60);
-  const lamaWaktuSblmTidur = Number(awakeTime);
-  const totalSeluruhWaktu = Number(convertSleepTime + lamaWaktuSblmTidur);
-  const efisiensiValue = Number(convertSleepTime / totalSeluruhWaktu);
-  const efisiensiTidur = efisiensiValue * 100;
-
   const getRentangEfisiensiTidur = () => {
+    const convertSleepTime = Number(sleepTime * 60);
+    const lamaWaktuSblmTidur = Number(awakeTime);
+    const totalSeluruhWaktu = Number(convertSleepTime + lamaWaktuSblmTidur);
+    const efisiensiValue = Number(convertSleepTime / totalSeluruhWaktu);
+    const efisiensiTidur = efisiensiValue * 100;
     let value = 0;
     if (efisiensiTidur < 65) {
       value = 3;
@@ -70,9 +128,9 @@ export default function Kuesioner({ navigation }) {
     return value;
   };
 
-  const getAllValue = Number(totalValue + getRentangEfisiensiTidur());
-
   const rentangNilaiKeseluruhan = () => {
+    const totalValue = Object.keys(answers)?.reduce((acc, curr) => acc + answers[curr], 0)
+    const getAllValue = Number(totalValue + getRentangEfisiensiTidur());
     let val = 0;
     if (getAllValue < 5) {
       val = "Baik";
@@ -81,6 +139,13 @@ export default function Kuesioner({ navigation }) {
     }
     return val;
   };
+
+  const onValueChange = useCallback((key) => (val) => {
+    setAnswers(prev => ({
+      ...prev,
+      [key]: val
+    }))
+  }, [])
 
   return (
     <ScrollView>
@@ -101,10 +166,9 @@ export default function Kuesioner({ navigation }) {
           2. Berapa lama (dalam menit) yang anda perlukan untuk dapat mulai
           tertidur setiap malam?
         </Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
+        <RadioButtonGroup 
           radioButtons={mockAnswerP2}
-          onPress={handlePress(2)}
+          onValueChange={onValueChange('p2')}
         />
         <Text style={Style.pertanyaan}>
           3. Berapa lama waktu yang anda habiskan di tempat tidur sebelum
@@ -117,114 +181,25 @@ export default function Kuesioner({ navigation }) {
           placeholder="*Dalam menit"
           keyboardType="numeric"
         />
-        <Text style={Style.pertanyaan}>
-          4. Berapa lama tidur anda di malam hari?
-        </Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP4}
-          onPress={handlePress(4)}
-        />
-        <Text style={Style.pertanyaan}>
-          5. Seberapa sering masalah dibawah ini mengganggu anda?
-        </Text>
-        <Text style={Style.pertanyaan}>
-          a. Tidak dapat tertidur selama 30 menit sejak berbaring
-        </Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP5}
-          onPress={handlePress("5a")}
-        />
-        <Text style={Style.pertanyaan}>
-          b. Terbangun ditengah malam atau dini hari
-        </Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP5b}
-          onPress={handlePress("5b")}
-        />
-        <Text style={Style.pertanyaan}>c. Terbangun untuk ke kamar mandi</Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP5c}
-          onPress={handlePress("5c")}
-        />
-        <Text style={Style.pertanyaan}>d. Sulit bernafas dengan baik</Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP5d}
-          onPress={handlePress("5d")}
-        />
-        <Text style={Style.pertanyaan}>e. Batuk atau mengorok</Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP5e}
-          onPress={handlePress("5e")}
-        />
-        <Text style={Style.pertanyaan}>f. Kedinginan di malam hari</Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP5f}
-          onPress={handlePress("5f")}
-        />
-        <Text style={Style.pertanyaan}>g. Kepanasan di malam hari</Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP5g}
-          onPress={handlePress("5g")}
-        />
-        <Text style={Style.pertanyaan}>h. Mimpi buruk</Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP5h}
-          onPress={handlePress("5h")}
-        />
-        <Text style={Style.pertanyaan}>i. Terasa nyeri</Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP5i}
-          onPress={handlePress("5i")}
-        />
-        <Text style={Style.pertanyaan}>
-          6. Selama satu bulan terakhir, seberapa sering anda menggunakan obat
-          tidur
-        </Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP6}
-          onPress={handlePress(6)}
-        />
-        <Text style={Style.pertanyaan}>
-          7. Selama satu bulan terakhir, seberapa sering anda mengantuk ketika
-          melakukan aktivitas di siang hari
-        </Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP7}
-          onPress={handlePress(7)}
-        />
-        <Text style={Style.pertanyaan}>
-          8. Selama satu bulan terakhir, berapa banyak masalah yang anda
-          dapatkan dan seberapa antusias anda selesaikan permasalahan tersebut?
-        </Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP8}
-          onPress={handlePress(8)}
-        />
-        <Text style={Style.pertanyaan}>
-          9. Selama satu bulan terakhir, bagaimana anda menilai kepuasan tidur
-          anda?
-        </Text>
-        <RadioGroup
-          containerStyle={Style.radioButton}
-          radioButtons={mockAnswerP9}
-          onPress={handlePress(9)}
-        />
+        {
+          radioButtonsListForm?.map(r => (
+            <View key={r.key}>
+              <Text style={Style.pertanyaan}>
+                {r.textQuestions}
+              </Text>
+              <RadioButtonGroup 
+                radioButtons={r.answers}
+                onValueChange={onValueChange(r.key)}
+              />
+            </View>
+          ))
+        }
         <TouchableOpacity
           style={Style.buttonSubmit}
-          onPress={() => setModalVisible(true)}
+          onPress={() => {
+            setModalVisible(true)
+            setAnswers(getInitialState());
+          }}
         >
           <Text style={{ fontSize: 18 }}>Submit</Text>
         </TouchableOpacity>
