@@ -5,9 +5,7 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
-  Alert,
   Modal,
-  Button,
 } from "react-native";
 import RadioGroup from "react-native-radio-buttons-group";
 import {
@@ -42,8 +40,6 @@ export default function Kuesioner({ navigation }) {
       0
     );
     setTotalValue(total);
-    console.log("total" + total);
-    // console.log(JSON.stringify(answers, null, 2))
   }, [answers]);
 
   const handlePress = (no) => (radioButtons) => {
@@ -54,6 +50,38 @@ export default function Kuesioner({ navigation }) {
     }));
   };
 
+  const convertSleepTime = Number(sleepTime * 60);
+  const lamaWaktuSblmTidur = Number(awakeTime);
+  const totalSeluruhWaktu = Number(convertSleepTime + lamaWaktuSblmTidur);
+  const efisiensiValue = Number(convertSleepTime / totalSeluruhWaktu);
+  const efisiensiTidur = efisiensiValue * 100;
+
+  const getRentangEfisiensiTidur = () => {
+    let value = 0;
+    if (efisiensiTidur < 65) {
+      value = 3;
+    } else if (efisiensiTidur > 65 && efisiensiTidur <= 74) {
+      value = 2;
+    } else if (efisiensiTidur > 74 && efisiensiTidur <= 84) {
+      value = 1;
+    } else {
+      value = 0;
+    }
+    return value;
+  };
+
+  const getAllValue = Number(totalValue + getRentangEfisiensiTidur());
+
+  const rentangNilaiKeseluruhan = () => {
+    let val = 0;
+    if (getAllValue < 5) {
+      val = "Baik";
+    } else {
+      val = "Buruk";
+    }
+    return val;
+  };
+
   return (
     <ScrollView>
       <View
@@ -61,9 +89,7 @@ export default function Kuesioner({ navigation }) {
           modalVisible === false ? Style.container : Style.blurredContainer
         }
       >
-        <Text style={Style.pertanyaan}>
-          1. Berapa lama durasi tidur anda?
-        </Text>
+        <Text style={Style.pertanyaan}>1. Berapa lama durasi tidur anda?</Text>
         <TextInput
           style={Style.input}
           onChangeText={onChangeSleepTime}
@@ -81,7 +107,8 @@ export default function Kuesioner({ navigation }) {
           onPress={handlePress(2)}
         />
         <Text style={Style.pertanyaan}>
-          3. Berapa lama waktu yang anda habiskan di tempat tidur sebelum terlelap?
+          3. Berapa lama waktu yang anda habiskan di tempat tidur sebelum
+          terlelap?
         </Text>
         <TextInput
           style={Style.input}
@@ -211,12 +238,40 @@ export default function Kuesioner({ navigation }) {
         >
           <View style={Style.modalContainer}>
             <View style={Style.modalInner}>
-              <Text>Skor PSQI: {totalValue}</Text>
-              <Button
-                title="Hide Modal"
-                onPress={() => setModalVisible(false)}
-                style={{ backgroundColor: "#0CA590" }}
-              />
+              <Text>Kualitas tidur keseluruhan berdasarkan skor akhir:</Text>
+              <Text style={{ marginTop: 8, textDecorationLine: "underline" }}>
+                {rentangNilaiKeseluruhan()}
+              </Text>
+              <View style={Style.rentangNilai}>
+                {rentangNilaiKeseluruhan() === "Baik" && (
+                  <View style={Style.center}>
+                    <Text style={{ marginTop: 8 }}>
+                      Kualitas tidur anda sudah baik!
+                    </Text>
+                    <Text>Simak fakta-fakta menarik seputar tidur berikut</Text>
+                    <TouchableOpacity
+                      style={Style.buttonArtikel}
+                      onPress={() => navigation.navigate("IsiArtikel4")}
+                    >
+                      <Text style={{ fontSize: 18 }}>Lihat Artikel</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                {rentangNilaiKeseluruhan() === "Buruk" && (
+                  <View style={Style.center}>
+                    <Text style={{ marginTop: 8 }}>
+                      Sepertinya anda butuh bantuan
+                    </Text>
+                    <Text>Simak tips & trick seputar tidur berikut</Text>
+                    <TouchableOpacity
+                      style={Style.buttonArtikel}
+                      onPress={() => navigation.navigate("IsiArtikel1")}
+                    >
+                      <Text style={{ fontSize: 18 }}>Lihat Artikel</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
             </View>
           </View>
         </Modal>

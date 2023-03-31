@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     margin: 5,
+    textAlign: "justify",
   },
   author: {
     fontWeight: "bold",

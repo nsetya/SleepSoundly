@@ -10,6 +10,7 @@ import Alarm from "./src/screen/Alarm";
 import IsiArtikel1 from "./src/screen/IsiArtikel1.js";
 import IsiArtikel2 from "./src/screen/IsiArtikel2.js";
 import IsiArtikel3 from "./src/screen/IsiArtikel3.js";
+import IsiArtikel4 from "./src/screen/IsiArtikel4.js";
 import SleepDiary from "./src/screen/SleepDiary.js";
 
 const Stack = createNativeStackNavigator();
@@ -140,6 +141,20 @@ function App({ navigation }) {
         <Stack.Screen
           name="IsiArtikel3"
           component={IsiArtikel3}
+          options={{
+            title: "Tips & Trik",
+            headerStyle: {
+              backgroundColor: "#57C5B6",
+            },
+            headerTintColor: "#F9FAFC",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="IsiArtikel4"
+          component={IsiArtikel4}
           options={{
             title: "Tips & Trik",
             headerStyle: {

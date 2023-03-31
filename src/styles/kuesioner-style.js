@@ -52,6 +52,27 @@ const Style = StyleSheet.create({
     borderRadius: 6,
     backgroundColor: "#82B8AD",
   },
+  buttonArtikel: {
+    backgroundColor: "#00C6AB",
+    width: 120,
+    height: 34,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 12,
+  },
+  rentangNilai: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F9EEEE",
+    borderRadius: 6,
+    padding: 15,
+    marginTop: 30,
+  },
+  center: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
 export default Style;
