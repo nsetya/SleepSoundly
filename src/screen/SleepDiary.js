@@ -23,11 +23,18 @@ function SleepDiary({ navigation }) {
   });
 
   const handleSubmit = () => {
-    const newEntry = { date: formattedDate, text: text };
-    setSleepDiaryEntries([...sleepDiaryEntries, newEntry]);
-    onChangeText("");
-    setSelectDate(new Date());
-    Alert.alert("Sleep diary submitted");
+    const existingEntry = sleepDiaryEntries.find(
+      (entry) => entry.date === formattedDate
+    );
+    if (existingEntry) {
+      Alert.alert("Sleep diary already submitted for this date");
+    } else {
+      const newEntry = { date: formattedDate, text: text };
+      setSleepDiaryEntries([...sleepDiaryEntries, newEntry]);
+      onChangeText("");
+      setSelectDate(new Date());
+      Alert.alert("Sleep diary submitted");
+    }
   };
 
   return (
@@ -49,18 +56,6 @@ function SleepDiary({ navigation }) {
         >
           {formattedDate}
         </Text>
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#DDDDDD",
-            padding: 10,
-            width: 330,
-            alignItems: "center",
-            borderRadius: 4,
-          }}
-          onPress={() => setShowDateTimePicker(true)}
-        >
-          <Text style={{ fontSize: 18 }}>Select Date</Text>
-        </TouchableOpacity>
 
         {showDateTimePicker && (
           <DateTimePicker
