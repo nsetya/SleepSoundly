@@ -21,15 +21,16 @@ function IsiArtikel3({ navigation }) {
         <Text style={styles.title}>4 Olahraga untuk Mengatasi Insomnia</Text>
         <View>
           <Text style={styles.description}>
-            Insomnia merupakan gangguan tidur di malam hari yang terjadi secara
-            terus menerus yang dapat mengganggu kesehatan tubuh, seperti merasa
-            kurang berenergi, sulit konsentrasi, dan mood terganggu. Akibatnya
-            banyak orang yang memilih jalan pintas untuk meminum obat tidur.
+            {"   "}Insomnia merupakan gangguan tidur di malam hari yang terjadi
+            secara terus menerus yang dapat mengganggu kesehatan tubuh, seperti
+            merasa kurang berenergi, sulit konsentrasi, dan mood terganggu.
+            Akibatnya banyak orang yang memilih jalan pintas untuk meminum obat
+            tidur.
           </Text>
           <Text style={styles.description}>
-            Semua bentuk olahraga bermanfaat utnuk memaksimalkan waktu tidur.
-            Tapi ada beberapa yang memberikan dampak yang lebih efektif pada
-            kualitas tidur sehingga dapat membantu mengatasi insomnia.
+            {"   "}Semua bentuk olahraga bermanfaat utnuk memaksimalkan waktu
+            tidur. Tapi ada beberapa yang memberikan dampak yang lebih efektif
+            pada kualitas tidur sehingga dapat membantu mengatasi insomnia.
           </Text>
           <Text style={styles.description}>
             Berikut beberapa jenis olahraga yang bisa dilakukan untuk mencegah
@@ -105,6 +106,7 @@ const styles = StyleSheet.create({
     fontWeight: 600,
     marginTop: 10,
     marginBottom: 10,
+    textAlign: "center",
   },
   data: {
     flexDirection: "row",

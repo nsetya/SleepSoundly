@@ -23,10 +23,10 @@ function Isiartikel4({ navigation }) {
         </Text>
         <View>
           <Text style={styles.description}>
-            Tidur adalah kegiatan sehari-hari yang dibutuhkan manusia. Karena
-            setiap hari dilakukan, kadang tidur dianggap remeh. Padahal, tidur
-            tidak hanya sekedar memejamkan mata dan bermimpi. Dilansir oleh
-            sleepfoundation.org, inilah beberapa fakta unik tentang tidur.
+            {"   "}Tidur adalah kegiatan sehari-hari yang dibutuhkan manusia.
+            Karena setiap hari dilakukan, kadang tidur dianggap remeh. Padahal,
+            tidur tidak hanya sekedar memejamkan mata dan bermimpi. Dilansir
+            oleh sleepfoundation.org, inilah beberapa fakta unik tentang tidur.
           </Text>
           <Text style={styles.description}>
             1. Manusia adalah satu-satunya mamalia yang mau menunda tidur.
@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     fontWeight: 600,
     marginTop: 10,
     marginBottom: 10,
+    textAlign: "center",
   },
   data: {
     flexDirection: "row",

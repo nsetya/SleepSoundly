@@ -10,13 +10,13 @@ function IsiArtikel2({ navigation }) {
         }}
         style={styles.image}
       />
-      <Text style={styles.title}>5 Tips Mengatasi Insomnia</Text>
+      <Text style={styles.title}>Deep Breathing Exercise</Text>
       <View>
         <Text style={styles.description}>
-          Deep Breathing adalah latihan aktivitas paru dengan teknik napas dalam
-          untuk meningkatkan kapasitas paru dan ventilasi oksigenasi. Diaphragm
-          Breathing adalah pernapasan yang dilakukan dengan inspirasi maksimal
-          menggunakan otot perut.
+          {"   "}Deep Breathing adalah latihan aktivitas paru dengan teknik
+          napas dalam untuk meningkatkan kapasitas paru dan ventilasi
+          oksigenasi. Diaphragm Breathing adalah pernapasan yang dilakukan
+          dengan inspirasi maksimal menggunakan otot perut.
         </Text>
 
         <Text style={styles.description}>
@@ -37,11 +37,11 @@ function IsiArtikel2({ navigation }) {
           5. Tarik napas perlahan dari hidung, kembungkan perut, kembungkan dada
           kemudian buang napas perlahan, kempiskan perut, kempiskan dada.
         </Text>
-        <Text>
+        <Text style={styles.description}>
           6. Setelah kepala terasa sudah ringan, tarik napas kembali dan ulangi
           gerakan seperti di atas.
         </Text>
-        <Text>7. Buka mata secara perlahan.</Text>
+        <Text style={styles.description}>7. Buka mata secara perlahan.</Text>
         <Text style={{ marginTop: 20 }}>Sumber: </Text>
         <Text
           style={styles.source}
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     fontWeight: 600,
     marginTop: 10,
     marginBottom: 10,
+    textAlign: "center",
   },
   data: {
     flexDirection: "row",
@@ -89,6 +90,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     margin: 5,
+    textAlign: "justify",
   },
   author: {
     fontWeight: "bold",
