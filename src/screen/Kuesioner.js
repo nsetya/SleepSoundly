@@ -198,7 +198,6 @@ export default function Kuesioner({ navigation, route }) {
           style={Style.buttonSubmit}
           onPress={() => {
             setModalVisible(true)
-            setAnswers(getInitialState());
           }}
         >
           <Text style={{ fontSize: 18 }}>Submit</Text>
