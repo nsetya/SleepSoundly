@@ -6,7 +6,10 @@ import Kuesioner from "./src/screen/Kuesioner.js";
 import Tips from "./src/screen/Tips.js";
 import Musik from "./src/screen/Musik";
 import Alarm from "./src/screen/Alarm";
+import SleepDiaryEntriesScreen from "./src/screen/SleepDiaryEntriesScreen.js";
+import EditSleepDiaryEntries from "./src/screen/EditSleepDiaryEntries.js";
 // import Diary from "./src/screen/Diary.js";
+
 import IsiArtikel1 from "./src/screen/IsiArtikel1.js";
 import IsiArtikel2 from "./src/screen/IsiArtikel2.js";
 import IsiArtikel3 from "./src/screen/IsiArtikel3.js";
@@ -87,6 +90,35 @@ function App({ navigation }) {
           component={SleepDiary}
           options={{
             title: "Sleep Diary",
+            headerStyle: {
+              backgroundColor: "#57C5B6",
+            },
+            headerTintColor: "#F9FAFC",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="SleepDiaryEntriesScreen"
+          component={SleepDiaryEntriesScreen}
+          options={{
+            title: "Sleep Diary Entries",
+            headerStyle: {
+              backgroundColor: "#57C5B6",
+            },
+            headerTintColor: "#F9FAFC",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+        />
+
+        <Stack.Screen
+          name="EditSleepDiaryEntries"
+          component={EditSleepDiaryEntries}
+          options={{
+            title: "Edit Sleep Diary Entries",
             headerStyle: {
               backgroundColor: "#57C5B6",
             },
