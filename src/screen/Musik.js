@@ -14,7 +14,7 @@ function Musik({ navigation }) {
   const [sound, setSound] = useState(null);
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [favorite, setFavorite] = useState(false);
+  const [favorites, setFavorites] = useState([]);
 
   async function playSound(item) {
     if (sound !== null) {
@@ -34,15 +34,25 @@ function Musik({ navigation }) {
     }
   }
 
+  function toggleFavorite(item) {
+    if (favorites.includes(item)) {
+      setFavorites(favorites.filter((f) => f !== item));
+    } else {
+      setFavorites([...favorites, item]);
+    }
+  }
+
   function renderItem({ item }) {
+    const isCurrentSong = currentSong?.id === item.id;
+    const isFavorite = favorites.includes(item);
     return (
       <View style={styles.container}>
         <TouchableOpacity
-          onPress={() => (isPlaying ? pauseSound(item) : playSound(item))}
-          // onPress={() => playSound(item)}
-          // onPress={() => (isPlaying ? pauseSound() : playSound(currentSong))}
+          onPress={() =>
+            isPlaying && isCurrentSong ? pauseSound() : playSound(item)
+          }
         >
-          {isPlaying ? (
+          {isPlaying && isCurrentSong ? (
             <Image
               source={{
                 uri: "https://img.icons8.com/stickers/100/null/pause-squared.png",
@@ -60,8 +70,8 @@ function Musik({ navigation }) {
         </TouchableOpacity>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.duration}>{item.duration}</Text>
-        <TouchableOpacity onPress={() => setFavorite(true)}>
-          {favorite ? (
+        <TouchableOpacity onPress={() => toggleFavorite(item)}>
+          {isFavorite ? (
             <Image
               source={{
                 uri: "https://img.icons8.com/dusk/64/null/hearts.png",
@@ -80,7 +90,7 @@ function Musik({ navigation }) {
       </View>
     );
   }
-  
+
   return (
     <View>
       <Text style={styles.text}>Musik Relaksasi</Text>
