@@ -114,7 +114,7 @@ export default function Kuesioner({ navigation }) {
           style={Style.input}
           onChangeText={onChangeAwakeTime}
           value={awakeTime}
-          placeholder="Dalam menit"
+          placeholder="*Dalam menit"
           keyboardType="numeric"
         />
         <Text style={Style.pertanyaan}>

@@ -1,68 +1,145 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
   StyleSheet,
   Image,
-  Button,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import { Audio } from "expo-av";
+import { songs } from "../mock/mockSong.js";
 
 function Musik({ navigation }) {
   const [sound, setSound] = useState(null);
+  const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [favorite, setFavorite] = useState(false);
 
-  async function playSound() {
-    console.log("Loading Sound");
-    const { sound } = await Audio.Sound.createAsync(
-      // require("../../assets/mp3/Camp_Fire_Sound.mp3")
-      require("../../assets/Alarm.mp3")
-    );
-    setSound(sound);
+  async function playSound(item) {
+    if (sound !== null) {
+      await sound.unloadAsync();
+    }
+    const { sound: newSound } = await Audio.Sound.createAsync(item.source);
+    setSound(newSound);
+    setCurrentSong(item);
     setIsPlaying(true);
-    console.log("Playing Sound");
-    await sound.playAsync();
+    await newSound.playAsync();
   }
 
   async function pauseSound() {
     if (sound !== null) {
-      await sound.pauseAsync();
       setIsPlaying(false);
+      await sound.pauseAsync();
     }
   }
 
-  return (
-    <View>
-      <Text style={styles.text}>Musik Relaksasi</Text>
-      <View style={{ flexDirection: "row", padding: 10 }}>
+  function renderItem({ item }) {
+    return (
+      <View style={styles.container}>
         <TouchableOpacity
-          onPress={() => (isPlaying ? pauseSound() : playSound())}
+          onPress={() => (isPlaying ? pauseSound(item) : playSound(item))}
+          // onPress={() => playSound(item)}
+          // onPress={() => (isPlaying ? pauseSound() : playSound(currentSong))}
         >
           {isPlaying ? (
             <Image
               source={{
                 uri: "https://img.icons8.com/stickers/100/null/pause-squared.png",
               }}
-              style={{ width: 24, height: 24, marginLeft: 27, marginTop: 71 }}
+              style={styles.playIcon}
             />
           ) : (
             <Image
               source={{
                 uri: "https://img.icons8.com/plasticine/100/null/play.png",
               }}
-              style={{ width: 24, height: 24, marginLeft: 27, marginTop: 71 }}
+              style={styles.playIcon}
             />
           )}
         </TouchableOpacity>
-        <Text style={{ marginLeft: 20, marginTop: 71 }}>Replenish</Text>
-        <Text style={{ marginLeft: 120, marginTop: 71 }}>09.42</Text>
-        <Image
-          source={{
-            uri: "https://img.icons8.com/ios/50/null/like--v1.png",
-          }}
-          style={{ width: 24, height: 24, marginLeft: 10, marginTop: 71 }}
-        />
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.duration}>{item.duration}</Text>
+        <TouchableOpacity onPress={() => setFavorite(true)}>
+          {favorite ? (
+            <Image
+              source={{
+                uri: "https://img.icons8.com/dusk/64/null/hearts.png",
+              }}
+              style={styles.favoriteIcon}
+            />
+          ) : (
+            <Image
+              source={{
+                uri: "https://img.icons8.com/wired/64/null/hearts.png",
+              }}
+              style={styles.favoriteIcon}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  return (
+    <View>
+      <Text style={styles.text}>Musik Relaksasi</Text>
+      <FlatList
+        data={songs}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
+      <View style={styles.currentSong}>
+        {currentSong && (
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() =>
+                isPlaying ? pauseSound(currentSong) : playSound(currentSong)
+              }
+              // onPress={() => playSound(item)}
+              // onPress={() => (isPlaying ? pauseSound() : playSound(currentSong))}
+            >
+              {isPlaying ? (
+                <Image
+                  source={{
+                    uri: "https://img.icons8.com/stickers/100/null/pause-squared.png",
+                  }}
+                  style={styles.playIcon}
+                />
+              ) : (
+                <Image
+                  source={{
+                    uri: "https://img.icons8.com/plasticine/100/null/play.png",
+                  }}
+                  style={styles.playIcon}
+                />
+              )}
+            </TouchableOpacity>
+            <Text style={styles.title}>{currentSong.title}</Text>
+            <Text style={styles.duration}>{currentSong.duration}</Text>
+            <TouchableOpacity onPress={() => setFavorite(true)}>
+              {favorite ? (
+                <Image
+                  source={{
+                    uri: "https://img.icons8.com/dusk/64/null/hearts.png",
+                  }}
+                  style={styles.favoriteIcon}
+                />
+              ) : (
+                <Image
+                  source={{
+                    uri: "https://img.icons8.com/wired/64/null/hearts.png",
+                  }}
+                  style={styles.favoriteIcon}
+                />
+              )}
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -70,10 +147,45 @@ function Musik({ navigation }) {
 
 const styles = StyleSheet.create({
   text: {
-    marginLeft: 27,
+    paddingHorizontal: 12,
+    paddingTop: 27,
     fontSize: 24,
-    marginTop: 27,
-    marginBottom: 26,
+    marginBottom: 24,
+  },
+  container: {
+    flexDirection: "row",
+    paddingHorizontal: 12,
+    paddingBottom: 24,
+  },
+  playIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 10,
+  },
+  title: {
+    fontSize: 16,
+    paddingLeft: 10,
+  },
+  duration: {
+    fontSize: 16,
+    textAlign: "right",
+    flex: 1,
+    alignItems: "flex-end",
+    paddingRight: 12,
+  },
+  favoriteIcon: {
+    width: 24,
+    height: 24,
+  },
+  currentSong: {
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#bfcfab",
+    paddingHorizontal: 12,
+    width: 380,
+    height: 90,
+    borderRadius: 4,
   },
 });
 
