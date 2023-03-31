@@ -80,7 +80,7 @@ function Musik({ navigation }) {
       </View>
     );
   }
-
+  
   return (
     <View>
       <Text style={styles.text}>Musik Relaksasi</Text>
@@ -89,58 +89,6 @@ function Musik({ navigation }) {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />
-      <View style={styles.currentSong}>
-        {currentSong && (
-          <View
-            style={{
-              flexDirection: "row",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() =>
-                isPlaying ? pauseSound(currentSong) : playSound(currentSong)
-              }
-              // onPress={() => playSound(item)}
-              // onPress={() => (isPlaying ? pauseSound() : playSound(currentSong))}
-            >
-              {isPlaying ? (
-                <Image
-                  source={{
-                    uri: "https://img.icons8.com/stickers/100/null/pause-squared.png",
-                  }}
-                  style={styles.playIcon}
-                />
-              ) : (
-                <Image
-                  source={{
-                    uri: "https://img.icons8.com/plasticine/100/null/play.png",
-                  }}
-                  style={styles.playIcon}
-                />
-              )}
-            </TouchableOpacity>
-            <Text style={styles.title}>{currentSong.title}</Text>
-            <Text style={styles.duration}>{currentSong.duration}</Text>
-            <TouchableOpacity onPress={() => setFavorite(true)}>
-              {favorite ? (
-                <Image
-                  source={{
-                    uri: "https://img.icons8.com/dusk/64/null/hearts.png",
-                  }}
-                  style={styles.favoriteIcon}
-                />
-              ) : (
-                <Image
-                  source={{
-                    uri: "https://img.icons8.com/wired/64/null/hearts.png",
-                  }}
-                  style={styles.favoriteIcon}
-                />
-              )}
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
     </View>
   );
 }
@@ -176,16 +124,6 @@ const styles = StyleSheet.create({
   favoriteIcon: {
     width: 24,
     height: 24,
-  },
-  currentSong: {
-    alignSelf: "center",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#bfcfab",
-    paddingHorizontal: 12,
-    width: 380,
-    height: 90,
-    borderRadius: 4,
   },
 });
 
