@@ -24,7 +24,7 @@ import {
   mockAnswerP7,
   mockAnswerP8,
   mockAnswerP9,
-} from "../mockAnswer/index.js";
+} from "../mock/mockAnswer.js";
 import Style from "../styles/kuesioner-style.js";
 
 export default function Kuesioner({ navigation }) {
