@@ -6,6 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Modal,
+  Button,
 } from "react-native";
 import RadioGroup from "react-native-radio-buttons-group";
 import {
@@ -32,6 +34,7 @@ export default function Kuesioner({ navigation }) {
   const [awakeTime, onChangeAwakeTime] = React.useState("");
   const [answers, setAnswers] = useState({});
   const [totalValue, setTotalValue] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const total = Object.keys(answers).reduce(
@@ -53,15 +56,19 @@ export default function Kuesioner({ navigation }) {
 
   return (
     <ScrollView>
-      <View style={Style.container}>
+      <View
+        style={
+          modalVisible === false ? Style.container : Style.blurredContainer
+        }
+      >
         <Text style={Style.pertanyaan}>
-          1. Jam berapa biasanya anda tidur di malam hari?
+          1. Berapa lama durasi tidur anda?
         </Text>
         <TextInput
           style={Style.input}
           onChangeText={onChangeSleepTime}
           value={sleepTime}
-          placeholder="Contoh: 9"
+          placeholder="*Dalam jam"
           keyboardType="numeric"
         />
         <Text style={Style.pertanyaan}>
@@ -74,13 +81,13 @@ export default function Kuesioner({ navigation }) {
           onPress={handlePress(2)}
         />
         <Text style={Style.pertanyaan}>
-          3. Jam berapa biasanya anda bangun di pagi hari?
+          3. Berapa lama waktu yang anda habiskan di tempat tidur sebelum terlelap?
         </Text>
         <TextInput
           style={Style.input}
           onChangeText={onChangeAwakeTime}
           value={awakeTime}
-          placeholder="Contoh: 9"
+          placeholder="Dalam menit"
           keyboardType="numeric"
         />
         <Text style={Style.pertanyaan}>
@@ -190,10 +197,29 @@ export default function Kuesioner({ navigation }) {
         />
         <TouchableOpacity
           style={Style.buttonSubmit}
-          onPress={() => Alert.alert("Simple Button pressed")}
+          onPress={() => setModalVisible(true)}
         >
           <Text style={{ fontSize: 18 }}>Submit</Text>
         </TouchableOpacity>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(false);
+          }}
+        >
+          <View style={Style.modalContainer}>
+            <View style={Style.modalInner}>
+              <Text>Skor PSQI: {totalValue}</Text>
+              <Button
+                title="Hide Modal"
+                onPress={() => setModalVisible(false)}
+                style={{ backgroundColor: "#0CA590" }}
+              />
+            </View>
+          </View>
+        </Modal>
       </View>
     </ScrollView>
   );

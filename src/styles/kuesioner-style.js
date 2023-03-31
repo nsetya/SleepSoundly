@@ -5,9 +5,12 @@ const Style = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    margin: 15,
+    padding: 15,
     backgroundColor: "#F9FAFC",
-    borderRadius: 10,
+  },
+  blurredContainer: {
+    backgroundColor: "#F9FAFC",
+    opacity: 0.1,
   },
   pertanyaan: {
     marginLeft: 10,
@@ -34,6 +37,20 @@ const Style = StyleSheet.create({
     justifyContent: "center",
     marginTop: 12,
     borderRadius: 4,
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 25,
+  },
+  modalInner: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: 256,
+    borderRadius: 6,
+    backgroundColor: "#82B8AD",
   },
 });
 
