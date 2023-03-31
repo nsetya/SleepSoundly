@@ -9,12 +9,16 @@ import {
 } from "react-native";
 import { Audio } from "expo-av";
 import { songs } from "../mock/mockSong.js";
+import * as DocumentPicker from "expo-document-picker";
+import { FileSystem } from "expo-file-system";
+
 
 function Musik({ navigation }) {
   const [sound, setSound] = useState(null);
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [favorites, setFavorites] = useState([]);
+  const [musicList, setMusicList] = useState(songs);
 
   async function playSound(item) {
     if (sound !== null) {
@@ -34,11 +38,57 @@ function Musik({ navigation }) {
     }
   }
 
-  function toggleFavorite(item) {
-    if (favorites.includes(item)) {
-      setFavorites(favorites.filter((f) => f !== item));
-    } else {
-      setFavorites([...favorites, item]);
+function toggleFavorite(item) {
+  if (favorites.includes(item)) {
+    setFavorites(favorites.filter((f) => f !== item));
+  } else {
+    setFavorites([...favorites, item]);
+  }
+
+  // Find the index of the item in the music list
+  const index = musicList.findIndex((i) => i.id === item.id);
+
+  // If the item is in the music list, update its favorite status
+  if (index !== -1) {
+    const newList = [...musicList];
+    newList[index] = {
+      ...newList[index],
+      isFavorite: !newList[index].isFavorite,
+    };
+    setMusicList(newList);
+  }
+}
+
+
+  async function handleUploadMusic() {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "audio/*",
+      });
+
+      if (result.type === "success") {
+        const { name, uri } = result;
+        const newMusic = {
+          id: musicList.length + 1,
+          title: name,
+          duration: "0:00",
+          source: { uri },
+          isFavorite: false,
+        };
+
+
+        const { sound: newSound } = await Audio.Sound.createAsync(
+          newMusic.source
+        );
+        setSound(newSound);
+        setCurrentSong(newMusic);
+        setIsPlaying(true);
+        await newSound.playAsync();
+
+        setMusicList([...musicList, newMusic]);
+      }
+    } catch (error) {
+      console.log("Error uploading music:", error);
     }
   }
 
@@ -94,10 +144,13 @@ function Musik({ navigation }) {
   return (
     <View>
       <Text style={styles.text}>Musik Relaksasi</Text>
+      <TouchableOpacity onPress={handleUploadMusic}>
+        <Text style={styles.uploadButton}>Upload Music</Text>
+      </TouchableOpacity>
       <FlatList
-        data={songs}
+        data={musicList}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );
