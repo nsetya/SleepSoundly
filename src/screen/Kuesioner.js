@@ -24,13 +24,13 @@ import { Button as ButtonPaper } from 'react-native-paper';
 
 const radioButtonsListForm = [
   {
-    textQuestions: '4. Berapa lama tidur anda di malam hari?',
+    textQuestions: '4. Berapa lama tidur Anda di malam hari?',
     answers: mockAnswerP4,
     key: 'p4'
   },
   {
-    textQuestions: '5. Seberapa sering masalah dibawah ini mengganggu anda?',
-    answers: mockAnswerP5,
+    textQuestions: '5. Seberapa sering masalah dibawah ini mengganggu Anda?',
+    answers: null,
     key: 'p5'
   },
   {
@@ -79,25 +79,22 @@ const radioButtonsListForm = [
     key: 'p5i'
   },
   {
-    textQuestions: '6. Selama satu bulan terakhir, seberapa sering anda menggunakan obat tidur',
+    textQuestions: '6. Selama satu bulan terakhir, seberapa sering Anda menggunakan obat tidur?',
     answers: mockAnswerP6,
     key: 'p6'
   },
   {
-    textQuestions: `7. Selama satu bulan terakhir, seberapa sering anda mengantuk ketika
-    melakukan aktivitas di siang hari`,
+    textQuestions: `7. Selama satu bulan terakhir, seberapa sering Anda mengantuk ketika melakukan aktivitas di siang hari?`,
     answers: mockAnswerP7,
     key: 'p7'
   },
   {
-    textQuestions: `8. Selama satu bulan terakhir, berapa banyak masalah yang anda
-    dapatkan dan seberapa antusias anda selesaikan permasalahan tersebut?`,
+    textQuestions: `8. Selama satu bulan terakhir, berapa banyak masalah yang Anda dapatkan dan seberapa antusias Anda selesaikan permasalahan tersebut?`,
     answers: mockAnswerP8,
     key: 'p8'
   },
   {
-    textQuestions: `9. Selama satu bulan terakhir, bagaimana anda menilai kepuasan tidur
-    anda?`,
+    textQuestions: `9. Selama satu bulan terakhir, bagaimana Anda menilai kepuasan tidur Anda?`,
     answers: mockAnswerP9,
     key: 'p9'
   },
@@ -153,7 +150,7 @@ export default function Kuesioner({ navigation, route }) {
     navigation.navigate(screenName)
   }
 
-  const isButtonDisabled = Object.keys(answers).length < 16 || sleepTime === '' || awakeTime === '';
+  const isButtonDisabled = Object.keys(answers).length < 15 || sleepTime === '' || awakeTime === '';
 
   return (
     <ScrollView>
@@ -162,7 +159,7 @@ export default function Kuesioner({ navigation, route }) {
           modalVisible === false ? Style.container : Style.blurredContainer
         }
       >
-        <Text style={Style.pertanyaan}>1. Berapa lama durasi tidur anda?</Text>
+        <Text style={Style.pertanyaan}>1. Berapa lama durasi tidur Anda?</Text>
         <TextInput
           style={Style.input}
           onChangeText={onChangeSleepTime}
@@ -171,16 +168,14 @@ export default function Kuesioner({ navigation, route }) {
           keyboardType="numeric"
         />
         <Text style={Style.pertanyaan}>
-          2. Berapa lama (dalam menit) yang anda perlukan untuk dapat mulai
-          tertidur setiap malam?
+          2. Berapa lama (dalam menit) yang Anda perlukan untuk dapat mulai tertidur setiap malam?
         </Text>
         <RadioButtonGroup 
           radioButtons={mockAnswerP2}
           onValueChange={onValueChange('p2')}
         />
         <Text style={Style.pertanyaan}>
-          3. Berapa lama waktu yang anda habiskan di tempat tidur sebelum
-          terlelap?
+          3. Berapa lama waktu yang Anda habiskan di tempat tidur sebelum terlelap?
         </Text>
         <TextInput
           style={Style.input}
