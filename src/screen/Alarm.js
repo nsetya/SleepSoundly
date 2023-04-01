@@ -101,7 +101,7 @@ async function schedulePushNotification(dateTime, message) {
       title: "Alarm",
       body: message,
       data: { data: "goes here" },
-      sound: require("../../assets/Alarm.mp3"),
+      sound: "alarm1.wav",
     },
     trigger: { date: dateTime, repeatInterval: "day" },
   });
@@ -110,17 +110,12 @@ async function schedulePushNotification(dateTime, message) {
 async function registerForPushNotificationsAsync() {
   let token;
 
-  // Load the sound file from the app's assets directory
-  const soundObject = new Asset("Alarm.mp3");
-  await soundObject.downloadAsync();
-
   if (Platform.OS === "android") {
     await Notifications.setNotificationChannelAsync("default", {
       name: "default",
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
       lightColor: "#FF231F7C",
-      sound: soundObject,
     });
   }
 
