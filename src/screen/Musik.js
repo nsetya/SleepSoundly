@@ -237,14 +237,14 @@ function Musik({ navigation }) {
                 }}
               >
                 <Button
-                  buttonColor="#83d4b6"
+                  buttonColor="#2D6871"
                   style={{ width: "50%" }}
                   onPress={() => setShowModal(false)}
                 >
                   <Text style={{ color: "#ffffff" }}>Tinjau Kembali</Text>
                 </Button>
                 <Button
-                  buttonColor="#83d4b6"
+                  buttonColor="#2D6871"
                   style={{ width: "50%" }}
                   onPress={handleUploadMusic}
                 >

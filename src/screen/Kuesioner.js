@@ -227,7 +227,7 @@ export default function Kuesioner({ navigation, route }) {
           <View style={Style.modalContainer}>
             <View style={Style.modalInner}>
               <Text>Kualitas tidur keseluruhan berdasarkan skor akhir:</Text>
-              <Text style={{ marginTop: 8, textDecorationLine: "underline" }}>
+              <Text style={{ marginTop: 8, textDecorationLine: "underline", fontWeight: "bold" }}>
                 {rentangNilaiKeseluruhan()}
               </Text>
               <View style={Style.rentangNilai}>
@@ -241,21 +241,21 @@ export default function Kuesioner({ navigation, route }) {
                       style={Style.buttonArtikel}
                       onPress={() => onClickArticle('IsiArtikel4')}
                     >
-                      <Text style={{ fontSize: 18 }}>Lihat Artikel</Text>
+                      <Text style={{ fontSize: 18, color: "#ffffff" }}>Lihat Artikel</Text>
                     </TouchableOpacity>
                   </View>
                 )}
                 {rentangNilaiKeseluruhan() === "Buruk" && (
                   <View style={Style.center}>
                     <Text style={{ marginTop: 8 }}>
-                      Sepertinya anda butuh bantuan
+                      Sepertinya Anda butuh bantuan!
                     </Text>
                     <Text>Simak tips & trick seputar tidur berikut</Text>
                     <TouchableOpacity
                       style={Style.buttonArtikel}
                       onPress={() => onClickArticle('IsiArtikel1')}
                     >
-                      <Text style={{ fontSize: 18 }}>Lihat Artikel</Text>
+                      <Text style={{ fontSize: 18, color: "#ffffff" }}>Lihat Artikel</Text>
                     </TouchableOpacity>
                   </View>
                 )}

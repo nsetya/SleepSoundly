@@ -16,6 +16,7 @@ const Style = StyleSheet.create({
     marginLeft: 10,
     marginBottom: 5,
     marginTop: 5,
+    fontWeight: "bold"
   },
   input: {
     height: 40,

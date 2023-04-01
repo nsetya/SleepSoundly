@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
   Alert,
   TextInput,
   ScrollView,
@@ -11,16 +10,18 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { ASYNC_KEY } from "../utils/async-storage";
 import useStateAsyncStorage from "../hooks/useStateAsyncStorage";
+import { Button as ButtonPaper } from "react-native-paper";
 
 function SleepDiary({ navigation }) {
   const [text, onChangeText] = useState("");
   const [selectDate, setSelectDate] = useState(new Date());
   const [showDateTimePicker, setShowDateTimePicker] = useState(false);
 
-  const { data: sleepDiaryEntries, setData: setSleepDiaryEntries } = useStateAsyncStorage({
-    key: ASYNC_KEY.sleepDiaryEntries,
-    defaultValue: [],
-  });
+  const { data: sleepDiaryEntries, setData: setSleepDiaryEntries } =
+    useStateAsyncStorage({
+      key: ASYNC_KEY.sleepDiaryEntries,
+      defaultValue: [],
+    });
 
   const formattedDate = selectDate.toLocaleString("en-GB", {
     day: "numeric",
@@ -36,7 +37,7 @@ function SleepDiary({ navigation }) {
       Alert.alert("Sleep diary already submitted for this date");
     } else {
       const newEntry = { date: formattedDate, text: text };
-      setSleepDiaryEntries(prev => [...prev, newEntry]);
+      setSleepDiaryEntries((prev) => [...prev, newEntry]);
       onChangeText("");
       setSelectDate(new Date());
       Alert.alert("Sleep diary submitted");
@@ -44,25 +45,21 @@ function SleepDiary({ navigation }) {
   };
 
   return (
-    <ScrollView>
-      <Text style={{ marginLeft: 27, fontSize: 24, marginTop: 27 }}>
-        Sleep Diary Form
-      </Text>
-      <View style={{ marginLeft: 27, marginTop: 27, gap: 24 }}>
+    <ScrollView style={{ width: "100%", padding: 27 }}>
+      <Text style={{ fontSize: 24 }}>Sleep Diary Form</Text>
+      <View style={{ marginTop: 27, gap: 24 }}>
         <Text>Tanggal</Text>
         <Text
           style={{
             height: 48,
             borderWidth: 1,
             padding: 10,
-            width: 330,
             textAlignVertical: "center",
           }}
           onPress={() => setShowDateTimePicker(true)}
         >
           {formattedDate}
         </Text>
-
         {showDateTimePicker && (
           <DateTimePicker
             value={selectDate}
@@ -74,14 +71,12 @@ function SleepDiary({ navigation }) {
             }}
           />
         )}
-
         <Text>Deskripsikan bagaimana pola tidur anda saat ini:</Text>
         <TextInput
           style={{
             height: 156,
             borderWidth: 1,
             padding: 10,
-            width: 330,
             textAlignVertical: "top",
           }}
           onChangeText={onChangeText}
@@ -89,42 +84,31 @@ function SleepDiary({ navigation }) {
           multiline={true}
           placeholder={"Ketik disini"}
         />
-
-        <TouchableOpacity
+        <ButtonPaper
+          buttonColor="#DDDDDD"
+          mode="contained"
           style={{
-            backgroundColor: "#DDDDDD",
-            padding: 10,
-            width: 330,
             alignItems: "center",
-            borderRadius: 4,
-            marginBottom: 20,
+            borderRadius: 10,
           }}
           onPress={handleSubmit}
         >
-          <Text style={{ fontSize: 18 }}>Submit</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
+          <Text style={{ fontSize: 14, color: "#33424A" }}>Submit</Text>
+        </ButtonPaper>
+        <ButtonPaper
+          buttonColor="#DDDDDD"
+          mode="contained"
           style={{
-            backgroundColor: "#DDDDDD",
-            padding: 10,
-            width: 330,
             alignItems: "center",
-            borderRadius: 4,
-            marginTop: 20,
+            marginBottom: 20,
+            borderRadius: 10,
           }}
-          onPress={() =>
-            navigation.navigate("SleepDiaryEntriesScreen")
-          }
+          onPress={() => navigation.navigate("SleepDiaryEntriesScreen")}
         >
-          <Text
-            style={{
-              fontSize: 18,
-            }}
-          >
+          <Text style={{ fontSize: 14, color: "#33424A" }}>
             View All Entries
           </Text>
-        </TouchableOpacity>
+        </ButtonPaper>
       </View>
     </ScrollView>
   );
