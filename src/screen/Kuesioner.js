@@ -202,7 +202,7 @@ export default function Kuesioner({ navigation, route }) {
             </View>
           ))
         }
-        <TouchableOpacity onPress={() => setModalVisible(true)}
+        <TouchableOpacity
             style={Style.buttonSubmit}>
           <ButtonPaper 
             buttonColor="#00C6AB"
@@ -216,6 +216,7 @@ export default function Kuesioner({ navigation, route }) {
               justifyContent: 'center',
               borderRadius: 10
             }}
+            onPress={() => setModalVisible(true)}
             >
             Submit
           </ButtonPaper>
