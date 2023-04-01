@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   StyleSheet,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function SleepDiary({ navigation }) {
   const [text, onChangeText] = useState("");
@@ -21,6 +22,33 @@ function SleepDiary({ navigation }) {
     month: "numeric",
     year: "numeric",
   });
+
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem("@sleepDiaryEntries", JSON.stringify(value));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("@sleepDiaryEntries");
+      if (value !== null) {
+        setSleepDiaryEntries(JSON.parse(value));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    storeData(sleepDiaryEntries);
+  }, [sleepDiaryEntries]);
 
   const handleSubmit = () => {
     const existingEntry = sleepDiaryEntries.find(
