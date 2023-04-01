@@ -5,9 +5,10 @@ import HomeScreen from "./src/screen/HomeScreen.js";
 import Kuesioner from "./src/screen/Kuesioner.js";
 import Tips from "./src/screen/Tips.js";
 import Musik from "./src/screen/Musik";
-import Alarm from "./src/screen/Alarm";
+import Alarm from "./src/screen/Alarm.js";
 import SleepDiaryEntriesScreen from "./src/screen/SleepDiaryEntriesScreen.js";
 import EditSleepDiaryEntries from "./src/screen/EditSleepDiaryEntries.js";
+
 // import Diary from "./src/screen/Diary.js";
 
 import IsiArtikel1 from "./src/screen/IsiArtikel1.js";
@@ -57,6 +58,7 @@ function App({ navigation }) {
             },
           }}
         />
+
         <Stack.Screen
           name="Musik"
           component={Musik}
