@@ -11,7 +11,8 @@ import { Audio } from "expo-av";
 import { songs } from "../mock/mockSong.js";
 import * as DocumentPicker from "expo-document-picker";
 import { FileSystem } from "expo-file-system";
-
+import { Button } from "react-native-paper";
+import { ScrollView } from "react-native-virtualized-view";
 
 function Musik({ navigation }) {
   const [sound, setSound] = useState(null);
@@ -38,27 +39,26 @@ function Musik({ navigation }) {
     }
   }
 
-function toggleFavorite(item) {
-  if (favorites.includes(item)) {
-    setFavorites(favorites.filter((f) => f !== item));
-  } else {
-    setFavorites([...favorites, item]);
+  function toggleFavorite(item) {
+    if (favorites.includes(item)) {
+      setFavorites(favorites.filter((f) => f !== item));
+    } else {
+      setFavorites([...favorites, item]);
+    }
+
+    // Find the index of the item in the music list
+    const index = musicList.findIndex((i) => i.id === item.id);
+
+    // If the item is in the music list, update its favorite status
+    if (index !== -1) {
+      const newList = [...musicList];
+      newList[index] = {
+        ...newList[index],
+        isFavorite: !newList[index].isFavorite,
+      };
+      setMusicList(newList);
+    }
   }
-
-  // Find the index of the item in the music list
-  const index = musicList.findIndex((i) => i.id === item.id);
-
-  // If the item is in the music list, update its favorite status
-  if (index !== -1) {
-    const newList = [...musicList];
-    newList[index] = {
-      ...newList[index],
-      isFavorite: !newList[index].isFavorite,
-    };
-    setMusicList(newList);
-  }
-}
-
 
   async function handleUploadMusic() {
     try {
@@ -75,7 +75,6 @@ function toggleFavorite(item) {
           source: { uri },
           isFavorite: false,
         };
-
 
         const { sound: newSound } = await Audio.Sound.createAsync(
           newMusic.source
@@ -143,15 +142,26 @@ function toggleFavorite(item) {
 
   return (
     <View>
-      <Text style={styles.text}>Musik Relaksasi</Text>
-      <TouchableOpacity onPress={handleUploadMusic}>
-        <Text style={styles.uploadButton}>Upload Music</Text>
-      </TouchableOpacity>
-      <FlatList
-        data={musicList}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      <ScrollView>
+        <Text style={styles.text}>Musik Relaksasi</Text>
+        <FlatList
+          data={musicList}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+        />
+        <TouchableOpacity
+          onPress={handleUploadMusic}
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            paddingBottom: 24,
+          }}
+        >
+          <Button buttonColor="#00C6AB" style={{ width: 256 }}>
+            <Text style={{ color: "#ffffff" }}>Upload Musik</Text>
+          </Button>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }

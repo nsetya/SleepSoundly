@@ -28,7 +28,8 @@
     "expo-asset": "~8.9.1",
     "expo-av": "~13.2.1",
     "expo-document-picker": "~11.2.2",
-    "expo-file-system": "~15.2.2"
+    "expo-file-system": "~15.2.2",
+    "react-native-virtualized-view": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
