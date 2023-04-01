@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  Modal,
 } from "react-native";
 import { Audio } from "expo-av";
 import { songs } from "../mock/mockSong.js";
@@ -21,6 +22,7 @@ function Musik({ navigation }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [favorites, setFavorites] = useState([]);
   const [musicList, setMusicList] = useState(songs);
+  const [showModal, setShowModal] = useState(false);
 
   async function playSound(item) {
     if (sound !== null) {
@@ -88,6 +90,7 @@ function Musik({ navigation }) {
         const { sound: newSound } = await Audio.Sound.createAsync(
           newMusic.source
         );
+        setShowModal(false);
         setSound(newSound);
         setCurrentSong(newMusic);
         setIsPlaying(true);
@@ -165,7 +168,7 @@ function Musik({ navigation }) {
   }
 
   return (
-    <View>
+    <View style={showModal === false ? "" : styles.blurredContainer}>
       <ScrollView>
         <Text style={styles.text}>Musik Relaksasi</Text>
         <FlatList
@@ -174,7 +177,7 @@ function Musik({ navigation }) {
           keyExtractor={(item) => item.id.toString()}
         />
         <TouchableOpacity
-          onPress={handleUploadMusic}
+          onPress={() => setShowModal(true)}
           style={{
             alignItems: "center",
             justifyContent: "center",
@@ -182,9 +185,75 @@ function Musik({ navigation }) {
           }}
         >
           <Button buttonColor="#00C6AB" style={{ width: 256 }}>
-            <Text style={{ color: "#ffffff" }}>Upload Musik</Text>
+            <Text style={{ color: "#ffffff" }}>Unggah Musik</Text>
           </Button>
         </TouchableOpacity>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showModal}
+          onRequestClose={() => {
+            setShowModal(false);
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 14,
+            }}
+          >
+            <View
+              style={{
+                padding: 24,
+                backgroundColor: "#82B8AD",
+                borderRadius: 10,
+              }}
+            >
+              <Text style={styles.modalText}>
+                Pastikan bahwa musik yang Anda unggah memiliki beberapa
+                karakteristik berikut:
+              </Text>
+              <Text> </Text>
+              <Text style={styles.modalText}>
+                1. Memiliki melodi yang lembut dan tenang
+              </Text>
+              <Text style={styles.modalText}>2. Mengandung bunyi alam</Text>
+              <Text style={styles.modalText}>
+                3. Tidak terlalu banyak variasi melodi dan ritme
+              </Text>
+              <Text style={styles.modalText}>4. Tanpa vokal atau lirik</Text>
+              <Text style={styles.modalText}>
+                5. Memiliki tempo yang lambat
+              </Text>
+              <Text> </Text>
+              <Text> </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  gap: 24,
+                }}
+              >
+                <Button
+                  buttonColor="#83d4b6"
+                  style={{ width: "50%" }}
+                  onPress={() => setShowModal(false)}
+                >
+                  <Text style={{ color: "#ffffff" }}>Tinjau Kembali</Text>
+                </Button>
+                <Button
+                  buttonColor="#83d4b6"
+                  style={{ width: "50%" }}
+                  onPress={handleUploadMusic}
+                >
+                  <Text style={{ color: "#ffffff" }}>Unggah</Text>
+                </Button>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </View>
   );
@@ -221,6 +290,14 @@ const styles = StyleSheet.create({
   favoriteIcon: {
     width: 24,
     height: 24,
+  },
+  blurredContainer: {
+    opacity: 0.1,
+  },
+  modalText: {
+    color: "#F4F7F6",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });
 
