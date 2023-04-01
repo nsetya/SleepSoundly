@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -13,6 +13,7 @@ import * as DocumentPicker from "expo-document-picker";
 import { FileSystem } from "expo-file-system";
 import { Button } from "react-native-paper";
 import { ScrollView } from "react-native-virtualized-view";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Musik({ navigation }) {
   const [sound, setSound] = useState(null);
@@ -60,6 +61,14 @@ function Musik({ navigation }) {
     }
   }
 
+  const storeMusic = async (musicList) => {
+    try {
+      await AsyncStorage.setItem("@musicList", JSON.stringify(musicList));
+    } catch (error) {
+      console.log("Error storing music:", error);
+    }
+  };
+
   async function handleUploadMusic() {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -85,11 +94,26 @@ function Musik({ navigation }) {
         await newSound.playAsync();
 
         setMusicList([...musicList, newMusic]);
+        storeMusic([...musicList, newMusic]); // add this line
       }
     } catch (error) {
       console.log("Error uploading music:", error);
     }
   }
+
+  useEffect(() => {
+    async function getMusic() {
+      try {
+        const music = await AsyncStorage.getItem("@musicList");
+        if (music !== null) {
+          setMusicList(JSON.parse(music));
+        }
+      } catch (error) {
+        console.log("Error getting music:", error);
+      }
+    }
+    getMusic();
+  }, []);
 
   function renderItem({ item }) {
     const isCurrentSong = currentSong?.id === item.id;
