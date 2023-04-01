@@ -145,8 +145,8 @@ function Musik({ navigation }) {
           )}
         </TouchableOpacity>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.duration}>{item.duration}</Text>
-        <TouchableOpacity onPress={() => toggleFavorite(item)}>
+        {/* <Text style={styles.duration}>{item.duration}</Text> */}
+        <TouchableOpacity onPress={() => toggleFavorite(item)} style={{flex: 1, alignItems: 'flex-end'}}>
           {isFavorite ? (
             <Image
               source={{
@@ -295,7 +295,8 @@ const styles = StyleSheet.create({
     opacity: 0.1,
   },
   modalText: {
-    color: "#F4F7F6",
+    // color: "#F4F7F6",
+    color: "#2D6871",
     fontSize: 14,
     fontWeight: "bold",
   },
