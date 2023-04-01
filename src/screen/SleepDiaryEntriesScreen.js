@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -7,43 +7,47 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import { ASYNC_KEY } from "../utils/async-storage";
+import useStateAsyncStorage from "../hooks/useStateAsyncStorage";
+import { useIsFocused } from '@react-navigation/native';
 
-function SleepDiaryEntriesScreen({ route, navigation }) {
-  const { sleepDiaryEntries } = route.params;
-  const [entries, setEntries] = useState(sleepDiaryEntries);
+function SleepDiaryEntriesScreen({ navigation, route }) {
+  const { data, setData: setSleepDiaryEntries } = useStateAsyncStorage({
+    key: ASYNC_KEY.sleepDiaryEntries,
+    defaultValue: [],
+  });
+
+  const sleepDiaryEntries = route.params?.sleepDiaryEntries || data;
 
   const handleEditEntry = (index) => {
     navigation.navigate("EditSleepDiaryEntries", {
       index: index,
-      sleepDiaryEntries: sleepDiaryEntries,
       date: sleepDiaryEntries[index].date,
       text: sleepDiaryEntries[index].text,
-      onEditEntry: (editedEntry) => {
-        const updatedEntries = [...entries];
-        updatedEntries[index] = editedEntry;
-        setEntries(updatedEntries);
-      },
-      onRemoveEntry: () => {
-        const updatedEntries = [...entries];
-        updatedEntries.splice(index, 1);
-        setEntries(updatedEntries);
-        navigation.goBack();
-      },
     });
   };
+
+  const handleRemoveEntry = (index) => {
+    setSleepDiaryEntries(prev => [...prev]?.reduce((acc, curr, i) => i === index ? acc : [
+      ...acc,
+      curr
+    ], []))
+  }
 
   return (
     <ScrollView>
       <Text style={{ marginLeft: 27, fontSize: 24, marginTop: 27 }}>
         Diaries
       </Text>
-      {sleepDiaryEntries.map((entry, index) => (
+      {sleepDiaryEntries?.map?.((entry, index) => (
         <View key={index} style={styles.entryContainer}>
           <View style={styles.entry}>
             <Text>Tanggal: {entry.date}</Text>
             <Text>Deskripsi: {entry.text}</Text>
           </View>
-          <TouchableOpacity onPress={() => handleEditEntry(index)}>
+          <TouchableOpacity onPress={() => {
+              handleEditEntry(index)
+          }}>
             <Image
               source={{
                 uri: "https://img.icons8.com/plasticine/100/null/pencil.png",
@@ -53,9 +57,7 @@ function SleepDiaryEntriesScreen({ route, navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              const updatedEntries = [...entries];
-              updatedEntries.splice(index, 1);
-              setEntries(updatedEntries);
+              handleRemoveEntry(index)
             }}
           >
             <Image

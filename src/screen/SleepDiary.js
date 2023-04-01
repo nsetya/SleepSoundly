@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,46 +9,24 @@ import {
   StyleSheet,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ASYNC_KEY } from "../utils/async-storage";
+import useStateAsyncStorage from "../hooks/useStateAsyncStorage";
 
 function SleepDiary({ navigation }) {
   const [text, onChangeText] = useState("");
   const [selectDate, setSelectDate] = useState(new Date());
   const [showDateTimePicker, setShowDateTimePicker] = useState(false);
-  const [sleepDiaryEntries, setSleepDiaryEntries] = useState([]);
+
+  const { data: sleepDiaryEntries, setData: setSleepDiaryEntries } = useStateAsyncStorage({
+    key: ASYNC_KEY.sleepDiaryEntries,
+    defaultValue: [],
+  });
 
   const formattedDate = selectDate.toLocaleString("en-GB", {
     day: "numeric",
     month: "numeric",
     year: "numeric",
   });
-
-  const storeData = async (value) => {
-    try {
-      await AsyncStorage.setItem("@sleepDiaryEntries", JSON.stringify(value));
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("@sleepDiaryEntries");
-      if (value !== null) {
-        setSleepDiaryEntries(JSON.parse(value));
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  useEffect(() => {
-    storeData(sleepDiaryEntries);
-  }, [sleepDiaryEntries]);
 
   const handleSubmit = () => {
     const existingEntry = sleepDiaryEntries.find(
@@ -58,7 +36,7 @@ function SleepDiary({ navigation }) {
       Alert.alert("Sleep diary already submitted for this date");
     } else {
       const newEntry = { date: formattedDate, text: text };
-      setSleepDiaryEntries([...sleepDiaryEntries, newEntry]);
+      setSleepDiaryEntries(prev => [...prev, newEntry]);
       onChangeText("");
       setSelectDate(new Date());
       Alert.alert("Sleep diary submitted");
@@ -136,9 +114,7 @@ function SleepDiary({ navigation }) {
             marginTop: 20,
           }}
           onPress={() =>
-            navigation.navigate("SleepDiaryEntriesScreen", {
-              sleepDiaryEntries: sleepDiaryEntries,
-            })
+            navigation.navigate("SleepDiaryEntriesScreen")
           }
         >
           <Text

@@ -1,19 +1,37 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import useStateAsyncStorage from "../hooks/useStateAsyncStorage";
+import { ASYNC_KEY } from "../utils/async-storage";
 
 function EditSleepDiaryEntries({ route, navigation }) {
-  const { index, sleepDiaryEntries, date, text } = route.params;
+  const { index, date, text } = route.params;
+  
+  const { data: sleepDiaryEntries, setData: setSleepDiaryEntries, callbackRef } = useStateAsyncStorage({
+    key: ASYNC_KEY.sleepDiaryEntries,
+    defaultValue: [],
+  });
 
   const [newDate, setNewDate] = useState(date);
   const [newText, setNewText] = useState(text);
 
   const handleSave = () => {
     // Update the sleepDiaryEntries array with the new values
-    const newEntries = [...sleepDiaryEntries];
-    newEntries[index] = { date: newDate, text: newText };
-    navigation.navigate("SleepDiaryEntriesScreen", {
-      sleepDiaryEntries: newEntries,
-    });
+    
+    setSleepDiaryEntries(prev => {
+      const newData = [...prev]?.reduce((acc, curr, i) => i === index ? [
+        ...acc,
+        {
+          date: newDate, text: newText 
+        },
+      ] : [
+        ...acc,
+        curr
+      ], [])
+      callbackRef.current = () => navigation.navigate("SleepDiaryEntriesScreen", {
+        sleepDiaryEntries: newData
+      });
+     return newData
+    })
   };
 
   return (
