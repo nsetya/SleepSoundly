@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { ASYNC_KEY } from "../utils/async-storage";
 import useStateAsyncStorage from "../hooks/useStateAsyncStorage";
-import { useIsFocused } from '@react-navigation/native';
 
 function SleepDiaryEntriesScreen({ navigation, route }) {
   const { data, setData: setSleepDiaryEntries } = useStateAsyncStorage({

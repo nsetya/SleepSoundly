@@ -16,10 +16,6 @@ export const storeData = async (key, value, callback) => {
 export const getData = async (key, callback) => {
     try {
         const value = await AsyncStorage.getItem(key, callback);
-        
-        console.log({
-            value,
-        })
         return JSON.parse(value);
     } catch (e) {
         console.error(e);
