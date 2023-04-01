@@ -30,8 +30,7 @@ const Style = StyleSheet.create({
     marginLeft: 15,
   },
   buttonSubmit: {
-    backgroundColor: "#DDDDDD",
-    padding: 10,
+    padding: 5,
     width: "100%",
     alignItems: "center",
     justifyContent: "center",

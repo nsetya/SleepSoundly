@@ -20,6 +20,7 @@ import {
 } from "../mock/mockAnswer.js";
 import Style from "../styles/kuesioner-style.js";
 import RadioButtonGroup from "../components/RadioButtonGroup/index.js";
+import { Button as ButtonPaper } from 'react-native-paper';
 
 const radioButtonsListForm = [
   {
@@ -147,6 +148,13 @@ export default function Kuesioner({ navigation, route }) {
     }))
   }, [])
 
+  const onClickArticle = (screenName) => {
+    setModalVisible(false)
+    navigation.navigate(screenName)
+  }
+
+  const isButtonDisabled = Object.keys(answers).length < 16 || sleepTime === '' || awakeTime === '';
+
   return (
     <ScrollView>
       <View
@@ -194,13 +202,23 @@ export default function Kuesioner({ navigation, route }) {
             </View>
           ))
         }
-        <TouchableOpacity
-          style={Style.buttonSubmit}
-          onPress={() => {
-            setModalVisible(true)
-          }}
-        >
-          <Text style={{ fontSize: 18 }}>Submit</Text>
+        <TouchableOpacity onPress={() => setModalVisible(true)}
+            style={Style.buttonSubmit}>
+          <ButtonPaper 
+            buttonColor="#00C6AB"
+            mode="contained"
+            disabled={isButtonDisabled}
+            style={{
+              width: '100%',
+              height: 45,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 10
+            }}
+            >
+            Submit
+          </ButtonPaper>
         </TouchableOpacity>
         <Modal
           animationType="slide"
@@ -225,7 +243,7 @@ export default function Kuesioner({ navigation, route }) {
                     <Text>Simak fakta-fakta menarik seputar tidur berikut</Text>
                     <TouchableOpacity
                       style={Style.buttonArtikel}
-                      onPress={() => navigation.navigate("IsiArtikel4")}
+                      onPress={() => onClickArticle('IsiArtikel4')}
                     >
                       <Text style={{ fontSize: 18 }}>Lihat Artikel</Text>
                     </TouchableOpacity>
@@ -239,7 +257,7 @@ export default function Kuesioner({ navigation, route }) {
                     <Text>Simak tips & trick seputar tidur berikut</Text>
                     <TouchableOpacity
                       style={Style.buttonArtikel}
-                      onPress={() => navigation.navigate("IsiArtikel1")}
+                      onPress={() => onClickArticle('IsiArtikel1')}
                     >
                       <Text style={{ fontSize: 18 }}>Lihat Artikel</Text>
                     </TouchableOpacity>
