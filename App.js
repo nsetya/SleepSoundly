@@ -48,7 +48,7 @@ function App({ navigation }) {
           name="Alarm"
           component={Alarm}
           options={{
-            title: "Alarm",
+            title: "Pengingat Tidur",
             headerStyle: {
               backgroundColor: "#57C5B6",
             },

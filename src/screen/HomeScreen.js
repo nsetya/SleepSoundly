@@ -28,7 +28,7 @@ function HomeScreen({ navigation }) {
           style={styles.button}
           onPress={() => navigation.navigate("Alarm")}
         >
-          <Text style={styles.text}>Alarm</Text>
+          <Text style={styles.text}>Peningat Tidur</Text>
         </Pressable>
         <Pressable
           style={styles.button}

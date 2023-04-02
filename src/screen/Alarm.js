@@ -1,151 +1,202 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
-  View,
   Text,
+  View,
+  Button,
+  Platform,
   StyleSheet,
   TouchableOpacity,
-  Platform,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { Ionicons } from "@expo/vector-icons";
+import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
-const Alarm = ({ navigation }) => {
-  const [reminderTime, setReminderTime] = useState(null);
-  const [showPicker, setShowPicker] = useState(false);
-  const [notificationId, setNotificationId] = useState(null);
-  const REMINDER_TIME_KEY = "reminderTime";
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
+export default function Alarm({ navigation }) {
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+  const [dateTime, setDateTime] = useState(new Date());
+  const [showDateTimePicker, setShowDateTimePicker] = useState(false);
+
+  const getReminderValue = async () => {
+    try {
+      const value = await AsyncStorage.getItem("reminder");
+      return value !== null ? value : "no reminder set";
+    } catch (e) {
+      console.log(e);
+      return "Pengingat belum diatur";
+    }
+  };
+
+  const saveReminderValue = async (value) => {
+    try {
+      await AsyncStorage.setItem("reminder", value);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   useEffect(() => {
-    retrieveReminderTime();
-    return () => {
-      if (notificationId) {
-        Notifications.cancelScheduledNotificationAsync(notificationId);
+    registerForPushNotificationsAsync().then((token) =>
+      setExpoPushToken(token)
+    );
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
+    getReminderValue().then((value) => {
+      if (value !== "no reminder set") {
+        setDateTime(new Date(value));
       }
-      setReminderTime(null);
+      console.log(value);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
 
-  const retrieveReminderTime = async () => {
-    try {
-      const savedReminderTime = await AsyncStorage.getItem(REMINDER_TIME_KEY);
-      if (savedReminderTime !== null) {
-        const date = new Date(savedReminderTime);
-        setReminderTime(date);
-        scheduleNotification(date);
-        console.log(`Retrieved reminder time: ${date.toString()}`);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleReminderTimeChange = (event, selectedDate) => {
-    setShowPicker(Platform.OS === "ios");
-    if (selectedDate) {
-      setReminderTime(selectedDate);
-      scheduleNotification(selectedDate);
-      saveReminderTime(selectedDate);
-    }
-  };
-
-  const saveReminderTime = async (date) => {
-    try {
-      await AsyncStorage.setItem(REMINDER_TIME_KEY, date.toString());
-      console.log(`Saved reminder time: ${date.toString()}`);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const showTimepicker = () => {
-    setShowPicker(true);
-  };
-
-  const scheduleNotification = async (date) => {
-    if (notificationId) {
-      await Notifications.cancelScheduledNotificationAsync(notificationId);
-    }
-    const newNotificationId = await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Time to Sleep",
-        body: "It's time to go to bed! Sweet dreams 😴",
-        sound: true,
-      },
-      trigger: {
-        hour: date.getHours(),
-        minute: date.getMinutes(),
-        repeats: true,
-      },
-    });
-    setNotificationId(newNotificationId);
-    console.log(`Scheduled notification with ID ${newNotificationId}`);
-  };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Remind me at :</Text>
+      <Text style={styles.header}>Ingatkan saya pada :</Text>
       <Text style={styles.reminderTime}>
-        {reminderTime
-          ? reminderTime.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-          : "No reminder set"}
+        {dateTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
       </Text>
-      <TouchableOpacity onPress={showTimepicker}>
+      <TouchableOpacity onPress={() => setShowDateTimePicker(true)}>
         <View style={styles.reminderButton}>
           <Ionicons name="ios-alarm" size={28} color="#ffffff" />
-          <Text style={styles.reminderButtonText}>Set Reminder</Text>
+          <Text style={styles.reminderButtonText}>Atur Pengingat</Text>
         </View>
       </TouchableOpacity>
-      <Text style={styles.instructions}>
-        You'll receive a notification each day at that time reminding you to go
-        to bed.
-      </Text>
-      {showPicker && (
+      {showDateTimePicker && (
         <DateTimePicker
-          testID="dateTimePicker"
-          value={new Date()}
+          value={dateTime}
           mode="time"
           is24Hour={true}
           display="default"
-          onChange={handleReminderTimeChange}
+          onChange={(event, date) => {
+            setShowDateTimePicker(false);
+            date.setSeconds(0);
+            setDateTime(date);
+            const message = `Wake up! It's ${date.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}`;
+            schedulePushNotification(date, message);
+            saveReminderValue(date.toString());
+          }}
         />
       )}
+      <Text style={styles.instructions}>
+        Anda akan menerima notifikasi setiap hari pada waktu tersebut untuk
+        tidur.
+      </Text>
       <SleepReminderBenefits />
     </View>
   );
-};
+}
 
 const SleepReminderBenefits = () => {
   return (
     <View style={styles.benefitsContainer}>
       <Text style={styles.benefitsTitle}>
-        Benefits of setting a sleep reminder 💤
-      </Text>
-      <Text style={styles.benefitsText}>
-        - Helps establish a regular sleep routine
-      </Text>
-      <Text style={styles.benefitsText}>- Increased productivity</Text>
-      <Text style={styles.benefitsText}>- Better mental health</Text>
-      <Text style={styles.benefitsText}>- Encourages healthy sleep habits</Text>
-      <Text style={styles.benefitsText}>- Improves overall sleep quality</Text>
-      {/* versi bahasa indonesia */}
-      {/* <Text style={styles.benefitsTitle}>
         Manfaat mengatur pengingat tidur 💤
       </Text>
       <Text style={styles.benefitsText}>
         - Membantu membentuk rutinitas tidur yang teratur
       </Text>
-      <Text style={styles.benefitsText}>- Mendorong kebiasaan tidur yang sehat</Text>
-      <Text style={styles.benefitsText}>- Meningkatkan kualitas tidur secara keseluruhan</Text> */}
+      <Text style={styles.benefitsText}>
+        - Mendorong kebiasaan tidur yang sehat
+      </Text>
+      <Text style={styles.benefitsText}>
+        - Meningkatkan kualitas tidur secara keseluruhan
+      </Text>
     </View>
   );
 };
 
+async function schedulePushNotification(dateTime, message) {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "Waktunya istirahat!",
+      body: "Matikan semua gadget dan siapkan diri untuk tidur yang nyenyak 😴",
+      sound: true,
+    },
+    trigger: { date: dateTime, repeat: true },
+  });
+}
+
+async function registerForPushNotificationsAsync() {
+  let token;
+
+  if (Platform.OS === "android") {
+    await Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  return token;
+}
+
 const styles = StyleSheet.create({
+  box: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
+    backgroundColor: "rgba(87, 197, 182, 0.5)",
+    borderRadius: 10,
+    marginBottom: 50,
+  },
+  jam: {
+    fontSize: 60,
+    margin: 10,
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -194,5 +245,3 @@ const styles = StyleSheet.create({
     color: "grey",
   },
 });
-
-export default Alarm;
