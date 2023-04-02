@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import useStateAsyncStorage from "../hooks/useStateAsyncStorage";
 import { ASYNC_KEY } from "../utils/async-storage";
+import { Button as ButtonPaper } from "react-native-paper";
 
 function EditSleepDiaryEntries({ route, navigation }) {
   const { index, date, text } = route.params;
@@ -35,18 +36,17 @@ function EditSleepDiaryEntries({ route, navigation }) {
   };
 
   return (
-    <View>
-      <Text style={{ marginLeft: 27, fontSize: 24, marginTop: 27 }}>
-        Edit Diaries
+    <View style={{ width: "100%", padding: 27 }}>
+      <Text style={{ fontSize: 24 }}>
+        Edit Diary
       </Text>
-      <View style={{ marginLeft: 27, marginTop: 27, gap: 24 }}>
+      <View style={{ marginTop: 27, gap: 24 }}>
         <Text>Tanggal</Text>
         <Text
           style={{
             height: 48,
             borderWidth: 1,
             padding: 10,
-            width: 330,
             textAlignVertical: "center",
           }}
         >
@@ -58,25 +58,22 @@ function EditSleepDiaryEntries({ route, navigation }) {
             height: 156,
             borderWidth: 1,
             padding: 10,
-            width: 330,
             textAlignVertical: "top",
           }}
           onChangeText={setNewText}
           value={newText}
         />
-        <TouchableOpacity
+        <ButtonPaper
+          buttonColor="#DDDDDD"
+          mode="contained"
           style={{
-            backgroundColor: "#DDDDDD",
-            padding: 10,
-            width: 330,
             alignItems: "center",
-            borderRadius: 4,
-            marginBottom: 20,
+            borderRadius: 10,
           }}
           onPress={handleSave}
         >
-          <Text style={{ fontSize: 18 }}>Save</Text>
-        </TouchableOpacity>
+          <Text style={{ fontSize: 14, color: "#33424A" }}>Simpan</Text>
+        </ButtonPaper>
       </View>
     </View>
   );

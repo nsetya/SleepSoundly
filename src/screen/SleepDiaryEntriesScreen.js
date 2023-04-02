@@ -36,7 +36,7 @@ function SleepDiaryEntriesScreen({ navigation, route }) {
   return (
     <ScrollView>
       <Text style={{ marginLeft: 27, fontSize: 24, marginTop: 27 }}>
-        Diaries
+        Diary
       </Text>
       {sleepDiaryEntries?.map?.((entry, index) => (
         <View key={index} style={styles.entryContainer}>

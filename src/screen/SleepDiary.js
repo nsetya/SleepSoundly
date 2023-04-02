@@ -34,13 +34,13 @@ function SleepDiary({ navigation }) {
       (entry) => entry.date === formattedDate
     );
     if (existingEntry) {
-      Alert.alert("Sleep diary already submitted for this date");
+      Alert.alert("Sleep Diary telah tercatat untuk tanggal ini");
     } else {
       const newEntry = { date: formattedDate, text: text };
       setSleepDiaryEntries((prev) => [...prev, newEntry]);
       onChangeText("");
       setSelectDate(new Date());
-      Alert.alert("Sleep diary submitted");
+      Alert.alert("Sleep Diary berhasil dicatat");
     }
   };
 
@@ -106,7 +106,7 @@ function SleepDiary({ navigation }) {
           onPress={() => navigation.navigate("SleepDiaryEntriesScreen")}
         >
           <Text style={{ fontSize: 14, color: "#33424A" }}>
-            View All Entries
+            Lihat Semua Catatan
           </Text>
         </ButtonPaper>
       </View>
