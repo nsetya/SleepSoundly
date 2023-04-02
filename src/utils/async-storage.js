@@ -3,11 +3,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const ASYNC_KEY = {
     sleepDiaryEntries: '@sleepDiaryEntries',
+    favoriteMusicList: '@favoriteMusicList'
 }
 
 export const storeData = async (key, value, callback) => {
     try {
-      await AsyncStorage.setItem(key, JSON.stringify(value).trim(), callback);
+      if (value) {
+        await AsyncStorage.setItem(key, JSON.stringify(value).trim(), callback);
+      }
     } catch (e) {
       console.error(e);
     }

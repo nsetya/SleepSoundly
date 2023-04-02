@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ASYNC_KEY, getData, storeData } from '../../utils/async-storage';
+import { getData, storeData } from '../../utils/async-storage';
 
 const useStateAsyncStorage = ({
     key,
@@ -10,7 +10,7 @@ const useStateAsyncStorage = ({
 
     useEffect(() => {
         const setDataState = async () => {
-            const data = await getData(key) || defaultValue;
+            const data = (await getData(key))|| defaultValue;
             setData(data);
         };
       

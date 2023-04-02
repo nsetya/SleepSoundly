@@ -15,14 +15,20 @@ import { FileSystem } from "expo-file-system";
 import { Button } from "react-native-paper";
 import { ScrollView } from "react-native-virtualized-view";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import useStateAsyncStorage from "../hooks/useStateAsyncStorage/index.js";
+import { ASYNC_KEY } from "../utils/async-storage.js";
 
 function Musik({ navigation }) {
   const [sound, setSound] = useState(null);
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [favorites, setFavorites] = useState([]);
   const [musicList, setMusicList] = useState(songs);
   const [showModal, setShowModal] = useState(false);
+
+  const { data: favoriteList, setData: setFavoriteList } = useStateAsyncStorage({
+    defaultValue: {},
+    key: ASYNC_KEY.favoriteMusicList
+  });
 
   async function playSound(item) {
     if (sound !== null) {
@@ -43,24 +49,19 @@ function Musik({ navigation }) {
   }
 
   function toggleFavorite(item) {
-    if (favorites.includes(item)) {
-      setFavorites(favorites.filter((f) => f !== item));
+    if (favoriteList[item?.id]) {
+      setFavoriteList(prev => {
+        const newVal = {...prev}
+        delete newVal[item?.id]
+        return newVal
+      })
     } else {
-      setFavorites([...favorites, item]);
+      setFavoriteList(prev => ({
+        ...prev,
+        [item?.id]: item?.id
+      }))
     }
 
-    // Find the index of the item in the music list
-    const index = musicList.findIndex((i) => i.id === item.id);
-
-    // If the item is in the music list, update its favorite status
-    if (index !== -1) {
-      const newList = [...musicList];
-      newList[index] = {
-        ...newList[index],
-        isFavorite: !newList[index].isFavorite,
-      };
-      setMusicList(newList);
-    }
   }
 
   const storeMusic = async (musicList) => {
@@ -120,7 +121,7 @@ function Musik({ navigation }) {
 
   function renderItem({ item }) {
     const isCurrentSong = currentSong?.id === item.id;
-    const isFavorite = favorites.includes(item);
+    const isFavorite =  item?.id && !!favoriteList?.[item?.id];
     return (
       <View style={styles.container}>
         <TouchableOpacity
